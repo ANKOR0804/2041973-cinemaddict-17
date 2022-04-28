@@ -1,6 +1,6 @@
 # Проект «Киноман»
 
-* Студент: [Антон Корнев](https://up.htmlacademy.ru/ecmascript/17/user/2041973).
+* Студент: [Антон Корнев](https://htmlacademy.ru/profile/id2041973).
 * Наставник: [Артем Рудов](https://htmlacademy.ru/profile/artrudov).
 
 ---
