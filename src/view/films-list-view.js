@@ -1,10 +1,10 @@
 import {createElement} from '../render';
 
-const createNewTaskButtonTemplate = () => '<button class="control__button">+ ADD NEW MOVIE</button>';
+const createFilmsListTemplate = () => '<div class="films-list"></div>';
 
-export default class NewMovieButtonView {
+export default class FilmsListView {
   getTemplate() {
-    return createNewTaskButtonTemplate();
+    return createFilmsListTemplate();
   }
 
   getElement() {

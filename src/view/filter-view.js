@@ -1,17 +1,13 @@
+// *** Фильтры для фильмов ***
+
 import {createElement} from '../render';
 
 const createFilterTemplate = () => (
-  `<section class="main__filter filter container"></section>
-    <input
-    type="radio"
-    id="filter__all"
-    class="filter__input visually-hidden"
-    name="filter"
-    checked
-    />
-    <label for="filter__all" class="filter__label">
-    All <span class="filter__all-count">13</span>
-</label>
+  `<ul class="sort">
+    <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
+    <li><a href="#" class="sort__button">Sort by date</a></li>
+    <li><a href="#" class="sort__button">Sort by rating</a></li>
+  </ul>
     `
 );
 

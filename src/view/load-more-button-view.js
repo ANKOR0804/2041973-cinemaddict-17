@@ -1,6 +1,8 @@
+// *** Кнопка Show More ***
+
 import {createElement} from '../render';
 
-const createLoadMoreButtonTemplate = () => '<button class="load-more" type="button">Load more</button>';
+const createLoadMoreButtonTemplate = () => '<button class="films-list__show-more">Show more</button>';
 
 export default class LoadMoreButtonView {
   getTemplate() {

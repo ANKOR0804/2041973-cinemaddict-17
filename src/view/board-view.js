@@ -1,6 +1,8 @@
+// *** Сама доска ***
+
 import {createElement} from '../render';
 
-const createBoardTemplate = () => '<section class="board container"></section>'
+const createBoardTemplate = () => '<section class="board container"></section>';
 
 export default class BoardView {
   getTemplate() {
