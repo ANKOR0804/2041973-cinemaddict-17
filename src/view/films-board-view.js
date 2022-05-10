@@ -1,12 +1,12 @@
-// *** Сама доска ***
+// *** Сама доска фильмов ***
 
 import {createElement} from '../render';
 
-const createBoardTemplate = () => '<section class="board container"></section>';
+const createFilmsBoardTemplate = () => '<section class="films"></section>';
 
-export default class BoardView {
+export default class FilmsBoardView {
   getTemplate() {
-    return createBoardTemplate();
+    return createFilmsBoardTemplate();
   }
 
   getElement() {

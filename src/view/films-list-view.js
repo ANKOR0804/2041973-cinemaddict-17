@@ -1,6 +1,15 @@
+// *** Список фильмов ***
+
 import {createElement} from '../render';
 
-const createFilmsListTemplate = () => '<div class="films-list"></div>';
+const createFilmsListTemplate = () => (`
+<section class="films-list">
+      <h2 class="films-list__title">All movies. Upcoming</h2>
+
+      <div class="films-list__container">
+      </div>
+    </section>
+`);
 
 export default class FilmsListView {
   getTemplate() {
@@ -8,7 +17,7 @@ export default class FilmsListView {
   }
 
   getElement() {
-    if(!this.element) {
+    if (!this.element) {
       this.element = createElement(this.getTemplate());
     }
 

@@ -1,11 +1,13 @@
+// *** Фильтры фильмов ***
+
 import {createElement} from '../render';
 
 const createSortTemplate = () => (
-  `<div class="board__sort-list">
-    <a href="#" class="board__sort-item">Sort by default</a>
-    <a href="#" class="board__sort-item">Sort by date</a>
-    <a href="#" class="board__sort-item">Sort by rating</a>
-  </div>`
+  `<ul class="sort">
+    <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
+    <li><a href="#" class="sort__button">Sort by date</a></li>
+    <li><a href="#" class="sort__button">Sort by rating</a></li>
+  </ul>`
 );
 
 export default class SortView {
