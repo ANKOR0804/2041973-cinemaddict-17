@@ -1,8 +1,6 @@
 import FilmsBoardView from '../view/films-board-view';
 import FilmCardView from '../view/film-card-view';
 import FilmsListView from '../view/films-list-view';
-import FilmsListExtraView from '../view/films-list-extra-view';
-import FilmsPopupView from '../view/films-popup-view';
 import ShowMoreButtonView from '../view/show-more-button-view';
 import {render} from '../render';
 
