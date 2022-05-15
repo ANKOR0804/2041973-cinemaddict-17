@@ -15,8 +15,9 @@ export default class FilmsBoardPresenter {
     render(this.filmsListComponent, this.filmsBoardComponent.getElement());
 
     const filmCardContainer = document.querySelector('.films-list__container');
+    const filmCardTotalNumber = 5;
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < filmCardTotalNumber; i++) {
       render(new FilmCardView(), filmCardContainer);
     }
 
