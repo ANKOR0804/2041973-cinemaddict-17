@@ -115,6 +115,8 @@ button {
   letter-spacing: normal;
 }
 
+/* Профиль пользователя */
+
 .profile {
   display: flex;
   align-items: center;
@@ -129,6 +131,8 @@ button {
   display: block;
   margin-left: 15px;
 }
+
+/* Навигация */
 
 .main-navigation {
   border-bottom: solid 2px var(--outline-color);
@@ -161,6 +165,8 @@ button {
   color: var(--text-color-active);
 }
 
+/* Сортировка */
+
 .sort {
   display: flex;
 
@@ -191,6 +197,8 @@ button {
   color: #ffe800;
 }
 
+/* Доска фильмов */
+
 .films {
   display: flex;
   flex-wrap: wrap;
@@ -213,6 +221,7 @@ button {
   margin-top: 50px;
 }
 
+/* Карточка фильма */
 
 .film-card {
   flex-basis: 230px;
