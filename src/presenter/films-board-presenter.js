@@ -46,11 +46,13 @@ export default class FilmsBoardPresenter {
 
     const showFilmCardPopup = (event) => {
       const exception = filmComponent.element.querySelector('.film-card__controls');
+
       for(let i = 0; i < exception.childNodes.length; i++) {
         if(event.target === exception.childNodes[i]) {
           return false;
         }
       }
+
       render(filmPopupComponent, this.#filmCardCommentContainer, RenderPosition.BEFOREEND);
       document.querySelector('body').style.overflow = 'hidden';
     };
