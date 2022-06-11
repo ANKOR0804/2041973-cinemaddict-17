@@ -4,40 +4,54 @@ import FilmsBoardView from '../view/films-board-view';
 import FilmCardView from '../view/film-card-view';
 import FilmsPopupView from '../view/films-popup-view';
 import FilmsListView from '../view/films-list-view';
+import FilmsListContainerView from '../view/films-list-container-view';
 import ShowMoreButtonView from '../view/show-more-button-view';
+import SortView from '../view/sort-view';
+import NoFilmsView from '../view/no-films-view';
 import {render, RenderPosition} from '../render';
+
+const FILM_COUNT_PER_STEP = 5;
 
 export default class FilmsBoardPresenter {
   #filmsBoardContainer = null;
   #filmsModel = null;
   #commentsModel = null;
+  #filmCardCommentContainer = null;
 
   #filmsBoardComponent = new FilmsBoardView();
   #filmsListComponent = new FilmsListView();
+  #filmsListContainerComponent = new FilmsListContainerView();
+  #showMoreButtonComponent = new ShowMoreButtonView();
 
   #boardFilms = [];
   #boardFilmsComments = [];
-  #filmCardContainer = null;
-  #filmCardCommentContainer = null;
+  #renderFilmCount = FILM_COUNT_PER_STEP;
 
-  init = (filmsBoardContainer, filmsModel, commentsModel) => {
+  constructor(filmsBoardContainer, filmsModel, commentsModel) {
     this.#filmsBoardContainer = filmsBoardContainer;
     this.#filmsModel = filmsModel;
     this.#commentsModel = commentsModel;
+  }
+
+  init = () => {
     this.#boardFilms = [...this.#filmsModel.films];
     this.#boardFilmsComments = [...this.#commentsModel.comments];
 
-    render(this.#filmsBoardComponent, this.#filmsBoardContainer);
-    render(this.#filmsListComponent, this.#filmsBoardComponent.element);
+    this.#renderFilmsBoard();
+  };
 
-    this.#filmCardContainer = document.querySelector('.films-list__container');
-    this.#filmCardCommentContainer = document.querySelector('.main');
+  #handleShowMoreButtonClick = (event) => {
+    event.preventDefault();
+    this.#boardFilms
+      .slice(this.#renderFilmCount, this.#renderFilmCount + FILM_COUNT_PER_STEP)
+      .forEach((film) => this.#renderFilm(film, film));
 
-    for (let i = 0; i < this.#boardFilms.length; i++) {
-      this.#renderFilm(this.#boardFilms[i], this.#boardFilms[i]);
+    this.#renderFilmCount += FILM_COUNT_PER_STEP;
+
+    if (this.#renderFilmCount >= this.#boardFilms.length) {
+      this.#showMoreButtonComponent.element.remove();
+      this.#showMoreButtonComponent.removeElement();
     }
-
-    render(new ShowMoreButtonView(), this.#filmsListComponent.element);
   };
 
   #renderFilm = (film, filmPopup) => {
@@ -53,7 +67,7 @@ export default class FilmsBoardPresenter {
         }
       }
 
-      render(filmPopupComponent, this.#filmCardCommentContainer, RenderPosition.BEFOREEND);
+      render(filmPopupComponent, this.#filmCardCommentContainer);
       document.querySelector('body').style.overflow = 'hidden';
     };
 
@@ -80,6 +94,30 @@ export default class FilmsBoardPresenter {
       document.removeEventListener('keydown', onEscKeyDown);
     });
 
-    render(filmComponent, this.#filmCardContainer);
+    render(filmComponent, this.#filmsListContainerComponent.element);
+  };
+
+  #renderFilmsBoard = () => {
+    render(this.#filmsBoardComponent, this.#filmsBoardContainer);
+
+    this.#filmCardCommentContainer = document.querySelector('.main');
+
+    if(this.#boardFilms.length === 0) {
+      render(new NoFilmsView(), this.#filmsBoardComponent.element);
+    } else {
+      render(new SortView(), this.#filmsBoardComponent.element, RenderPosition.BEFOREBEGIN);
+      render(this.#filmsListComponent, this.#filmsBoardComponent.element);
+      render(this.#filmsListContainerComponent, this.#filmsListComponent.element);
+
+      for (let i = 0; i < Math.min(this.#boardFilms.length, FILM_COUNT_PER_STEP); i++) {
+        this.#renderFilm(this.#boardFilms[i], this.#boardFilms[i]);
+      }
+
+      if (this.#boardFilms.length > FILM_COUNT_PER_STEP) {
+        render(this.#showMoreButtonComponent, this.#filmsListComponent.element);
+
+        this.#showMoreButtonComponent.element.addEventListener('click', this.#handleShowMoreButtonClick);
+      }
+    }
   };
 }
