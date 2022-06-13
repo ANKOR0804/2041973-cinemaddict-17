@@ -3,7 +3,9 @@
 import {generateComments} from '../mock/film';
 
 export default class CommentsModel {
-  comments = generateComments();
+  #comments = generateComments();
 
-  getComments = () => this.comments;
+  get comments() {
+    return this.#comments;
+  }
 }
