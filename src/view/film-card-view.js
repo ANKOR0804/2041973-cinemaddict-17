@@ -1,7 +1,7 @@
 // *** Карточка фильма ***
 
-import {createElement} from '../render';
-import {humanizeDateByYear, humanizeDuration} from '../utils';
+import AbstractView from '../framework/view/abstract-view';
+import {humanizeDateByYear, humanizeDuration} from '../utils/film';
 
 const createFilmCardTemplate = (film) => {
   const {filmInfo} = film;
@@ -42,11 +42,11 @@ const createFilmCardTemplate = (film) => {
   );
 };
 
-export default class FilmCardView {
+export default class FilmCardView extends AbstractView {
   #film = null;
-  #element = null;
 
   constructor(film) {
+    super();
     this.#film = film;
   }
 
@@ -54,15 +54,13 @@ export default class FilmCardView {
     return createFilmCardTemplate(this.#film);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setClickHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.addEventListener('click', this.#clickHandler);
+  };
 
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
+  #clickHandler = (event) => {
+    event.preventDefault();
+    this._callback.click();
+  };
 }
