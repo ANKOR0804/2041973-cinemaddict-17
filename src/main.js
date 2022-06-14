@@ -15,7 +15,7 @@ const commentsModel = new CommentsModel();
 const filmsBoardPresenter = new FilmsBoardPresenter(siteMainElement, filmsModel, commentsModel);
 
 render(new HeaderProfileView(), siteHeaderElement);
-render(new MainNavigationView(), siteMainElement, RenderPosition.AFTERBEGIN);
+render(new MainNavigationView([...filmsModel.films]), siteMainElement, RenderPosition.AFTERBEGIN);
 render(new FooterStatisticsView(), siteFooterElement);
 
 filmsBoardPresenter.init();
