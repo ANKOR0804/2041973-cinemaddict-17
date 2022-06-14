@@ -1,4 +1,4 @@
-import {getRandomInteger} from '../utils.js';
+import {getRandomInteger} from '../utils/common';
 
 const genetareTitle = () => {
   const titles = [
@@ -66,8 +66,8 @@ const generateDescription = () => {
 
 const generateDate = () => {
   const dates = [
-    '2022-06-06T00:00:00.000Z',
-    '2022-06-04T00:00:00.000Z',
+    '2022-06-13T00:00:00.000Z',
+    '2022-06-14T00:00:00.000Z',
     '2022-06-01T00:00:00.000Z',
     '2009-04-12T16:12:32.554Z',
     '1999-03-13T00:00:00.000Z',

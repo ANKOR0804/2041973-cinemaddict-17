@@ -1,25 +1,12 @@
 // *** Сама доска фильмов ***
 
-import {createElement} from '../render';
+import AbstractView from '../framework/view/abstract-view';
 
 const createFilmsBoardTemplate = () => '<section class="films"></section>';
 
-export default class FilmsBoardView {
-  #element = null;
+export default class FilmsBoardView extends AbstractView{
 
   get template() {
     return createFilmsBoardTemplate();
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }

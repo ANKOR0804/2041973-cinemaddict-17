@@ -1,6 +1,6 @@
 // *** Дополнительные категории фильмов ***
 
-import {createElement} from '../render';
+import AbstractView from '../framework/view/abstract-view';
 
 const createFilmsListExtraTemplate = () => (
   `<section class="films-list films-list--extra">
@@ -63,22 +63,8 @@ const createFilmsListExtraTemplate = () => (
   </section>`
 );
 
-export default class FilmsListExtraView {
-  #element = null;
-
+export default class FilmsListExtraView extends AbstractView {
   get template() {
     return createFilmsListExtraTemplate();
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }

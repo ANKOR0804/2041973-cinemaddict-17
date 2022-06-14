@@ -1,7 +1,7 @@
 // *** Карточка попапа фильма ***
 
-import {createElement} from '../render';
-import {humanizeDuration, humanizeDateByDay, humanizeFullByTime} from '../utils';
+import AbstractView from '../framework/view/abstract-view';
+import {humanizeDuration, humanizeDateByDay, humanizeFullByTime} from '../utils/film';
 
 const createFilmsPopupTemplate = (film, comments) => {
   const {filmInfo} = film;
@@ -204,12 +204,12 @@ const createFilmsPopupTemplate = (film, comments) => {
   );
 };
 
-export default class FilmsPopupView {
+export default class FilmsPopupView extends  AbstractView {
   #film = null;
   #comments = null;
-  #element = null;
 
   constructor(film, comments) {
+    super();
     this.#film = film;
     this.#comments = comments;
   }
@@ -218,15 +218,13 @@ export default class FilmsPopupView {
     return createFilmsPopupTemplate(this.#film, this.#comments);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setClickHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#clickHandler);
+  };
 
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
+  #clickHandler = (event) => {
+    event.preventDefault();
+    this._callback.click();
+  };
 }
