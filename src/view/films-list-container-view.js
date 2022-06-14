@@ -1,14 +1,14 @@
-// *** Список фильмов ***
+// *** Контейнер списка фильмов ***
 
 import {createElement} from '../render';
 
-const createFilmsListTemplate = () => '<section class="films-list"></section>';
+const createFilmsListContainerTemplate = () => '<div class="films-list__container"></div>';
 
-export default class FilmsListView {
+export default class FilmsListContainerView {
   #element = null;
 
   get template() {
-    return createFilmsListTemplate();
+    return createFilmsListContainerTemplate();
   }
 
   get element() {
