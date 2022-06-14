@@ -60,8 +60,8 @@ export default class FilmsBoardPresenter {
     const showFilmCardPopup = (event) => {
       const exception = filmComponent.element.querySelector('.film-card__controls');
 
-      for(let i = 0; i < exception.childNodes.length; i++) {
-        if(event.target === exception.childNodes[i]) {
+      for (let i = 0; i < exception.childNodes.length; i++) {
+        if (event.target === exception.childNodes[i]) {
           return false;
         }
       }
@@ -101,7 +101,7 @@ export default class FilmsBoardPresenter {
 
     this.#filmCardCommentContainer = document.querySelector('.main');
 
-    if(this.#boardFilms.length === 0) {
+    if (this.#boardFilms.length === 0) {
       render(new NoFilmsView(), this.#filmsBoardComponent.element);
     } else {
       render(new SortView(), this.#filmsBoardComponent.element, RenderPosition.BEFOREBEGIN);
