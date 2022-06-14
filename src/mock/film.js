@@ -103,6 +103,17 @@ const generateRating = () => {
   return ratings[randomIndex];
 };
 
+const generateState = () => {
+  const states = [
+    true,
+    false,
+  ];
+
+  const randomIndex = getRandomInteger(0, states.length - 1);
+
+  return states[randomIndex];
+};
+
 export const generateComments = () => [
   {
     id: '0',
@@ -142,9 +153,9 @@ export const generateFilm = () => ({
   },
 
   userDetails: {
-    watchlist: false,
-    alreadyWatched: true,
+    watchlist: generateState(),
+    alreadyWatched: generateState(),
     watchingDate: generateDate(),
-    favorite: false,
+    favorite: generateState(),
   },
 });
