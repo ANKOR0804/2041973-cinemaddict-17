@@ -12,7 +12,7 @@ export default class FilmsBoardView {
   }
 
   get element() {
-    if(!this.#element) {
+    if (!this.#element) {
       this.#element = createElement(this.template);
     }
 
