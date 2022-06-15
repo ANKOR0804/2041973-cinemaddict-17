@@ -2,6 +2,7 @@
 
 import AbstractView from '../framework/view/abstract-view';
 import {humanizeDateByYear, humanizeDuration} from '../utils/film';
+import classNames from 'classnames';
 
 const createFilmCardTemplate = (film) => {
   const {filmInfo, userDetails} = film;
@@ -16,11 +17,9 @@ const createFilmCardTemplate = (film) => {
 
   const singleGenre = filmInfo.genre[0];
 
-  const isWatchlist = userDetails.watchlist === true ? 'film-card__controls-item--active' : '';
-
-  const isWatched = userDetails.alreadyWatched === true ? 'film-card__controls-item--active' : '';
-
-  const isFavorite = userDetails.favorite === true ? 'film-card__controls-item--active' : '';
+  const isWatchlist = classNames({'film-card__controls-item--active' : userDetails.watchlist});
+  const isWatched = classNames({'film-card__controls-item--active' : userDetails.alreadyWatched});
+  const isFavorite = classNames({'film-card__controls-item--active' : userDetails.favorite});
 
   return (
     `<article class="film-card">

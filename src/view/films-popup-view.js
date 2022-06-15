@@ -2,6 +2,7 @@
 
 import AbstractView from '../framework/view/abstract-view';
 import {humanizeDuration, humanizeDateByDay, humanizeFullByTime} from '../utils/film';
+import classNames from 'classnames';
 
 const createFilmsPopupTemplate = (film, comments) => {
   const {filmInfo, userDetails} = film;
@@ -49,11 +50,9 @@ const createFilmsPopupTemplate = (film, comments) => {
 
   returnImageOfEmotion();
 
-  const isWatchlist = userDetails.watchlist === true ? 'film-details__control-button--active' : '';
-
-  const isWatched = userDetails.alreadyWatched === true ? 'film-details__control-button--active' : '';
-
-  const isFavorite = userDetails.favorite === true ? 'film-details__control-button--active' : '';
+  const isWatchlist = classNames({'film-details__control-button--active' : userDetails.watchlist});
+  const isWatched = classNames({'film-details__control-button--active' : userDetails.alreadyWatched});
+  const isFavorite = classNames({'film-details__control-button--active' : userDetails.favorite});
 
   const renderComments = () => {
     let commentsList = '';

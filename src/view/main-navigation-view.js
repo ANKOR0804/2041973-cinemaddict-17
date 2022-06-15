@@ -3,55 +3,32 @@
 import AbstractView from '../framework/view/abstract-view';
 
 const createMainNavigationTemplate = (userInfo) => {
-  const watchListCount = () => {
-    let count = 0;
-
-    for (let i = 0; i < userInfo.length; i++) {
-      if (userInfo[i].userDetails.watchlist) {
-        count++;
-      }
-    }
-
-    return count;
+  let totalCount = {
+    watchListCount: 0,
+    favoriteCount: 0,
+    watchedList: 0,
   };
 
-  const favoriteCount = () => {
-    let count = 0;
+  totalCount = userInfo.reduce((count, item) => {
+    const isWatchlist = item.userDetails.watchlist ? 1 : 0;
+    const isFavoritelist = item.userDetails.alreadyWatched ? 1 : 0;
+    const isWatchedlist = item.userDetails.favorite ? 1 : 0;
 
-    for (let i = 0; i < userInfo.length; i++) {
-      if (userInfo[i].userDetails.favorite) {
-        count++;
-      }
-    }
-
-    return count;
-  };
-
-  const watchedCount = () => {
-    let count = 0;
-
-    for (let i = 0; i < userInfo.length; i++) {
-      if (userInfo[i].userDetails.alreadyWatched) {
-        count++;
-      }
-    }
-
-    return count;
-  };
-
-  const totalWatchlist = watchListCount();
-  const favoritelist = favoriteCount();
-  const watchedlist = watchedCount();
+    return {
+      watchListCount: count.watchListCount + isWatchlist,
+      favoriteCount: count.favoriteCount + isFavoritelist,
+      watchedList: count.watchedList + isWatchedlist};
+  }, totalCount);
 
   return (
     `<nav class="main-navigation">
     <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
     <a href="#watchlist" class="main-navigation__item">
-      Watchlist <span class="main-navigation__item-count">${totalWatchlist}</span></a>
+      Watchlist <span class="main-navigation__item-count">${totalCount.watchListCount}</span></a>
     <a href="#history" class="main-navigation__item">
-      History <span class="main-navigation__item-count">${favoritelist}</span></a>
+      History <span class="main-navigation__item-count">${totalCount.favoriteCount}</span></a>
     <a href="#favorites" class="main-navigation__item">
-      Favorites <span class="main-navigation__item-count">${watchedlist}</span></a>
+      Favorites <span class="main-navigation__item-count">${totalCount.watchedList}</span></a>
   </nav>`
   );
 };
