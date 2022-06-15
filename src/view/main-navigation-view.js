@@ -2,23 +2,22 @@
 
 import AbstractView from '../framework/view/abstract-view';
 
-const createMainNavigationTemplate = (userInfo) => {
-  let totalCount = {
+const createMainNavigationTemplate = (films) => {
+  const initialCount = {
     watchListCount: 0,
     favoriteCount: 0,
     watchedList: 0,
   };
 
-  totalCount = userInfo.reduce((count, item) => {
-    const isWatchlist = item.userDetails.watchlist ? 1 : 0;
-    const isFavoritelist = item.userDetails.alreadyWatched ? 1 : 0;
-    const isWatchedlist = item.userDetails.favorite ? 1 : 0;
+  const totalCount = films.reduce((count, item) => {
+    const {watchlist, alreadyWatched, favorite} = item.userDetails;
 
     return {
-      watchListCount: count.watchListCount + isWatchlist,
-      favoriteCount: count.favoriteCount + isFavoritelist,
-      watchedList: count.watchedList + isWatchedlist};
-  }, totalCount);
+      watchListCount: count.watchListCount + (watchlist ? 1 : 0),
+      favoriteCount: count.favoriteCount + (alreadyWatched ? 1 : 0),
+      watchedList: count.watchedList + (favorite ? 1 : 0)
+    };
+  }, initialCount);
 
   return (
     `<nav class="main-navigation">
