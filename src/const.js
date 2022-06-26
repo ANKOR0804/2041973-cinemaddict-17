@@ -15,3 +15,9 @@ export const extraSection = {
     TYPE: FILMS_LIST_EXTRA,
   },
 };
+
+export const SortType = {
+  BY_DEFAULT: 'by-default',
+  BY_DATE: 'by-date',
+  BY_RATING: 'by-rating',
+};

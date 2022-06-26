@@ -32,7 +32,7 @@ export default class FilmsModel {
 
   get topRatedFilms() {
     if (!this.#topRatedFilms) {
-      this.#topRatedFilms = this.#films
+      this.#topRatedFilms = this.films
         .sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating)
         .slice(0, Math.min(this.films.length, TOP_RATED_FILMS_COUNT));
     }
@@ -42,7 +42,7 @@ export default class FilmsModel {
 
   get mostCommentedFilms() {
     if (!this.#mostCommentedFilms) {
-      this.#mostCommentedFilms = this.#films
+      this.#mostCommentedFilms = this.films
         .sort((a, b) => b.comments.length - a.comments.length)
         .slice(0, Math.min(this.films.length, MOST_COMMENTED_FILMS_COUNT));
     }
