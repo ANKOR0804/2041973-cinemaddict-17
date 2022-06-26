@@ -2,7 +2,6 @@ import {render, RenderPosition} from './framework/render';
 import MainNavigationView from './view/main-navigation-view';
 import FilmsBoardPresenter from './presenter/films-board-presenter';
 import FilmsModel from './model/films-model';
-// import CommentsModel from './model/comments-model';
 
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
@@ -18,8 +17,6 @@ const filmsBoardPresenter = new FilmsBoardPresenter(
   new FilmsModel()
 );
 
-// render(new HeaderProfileView(), siteHeaderElement);
 render(new MainNavigationView([...filmsModel.films]), siteMainElement, RenderPosition.AFTERBEGIN);
-// render(new FooterStatisticsView(), siteFooterElement);
 
 filmsBoardPresenter.init();
