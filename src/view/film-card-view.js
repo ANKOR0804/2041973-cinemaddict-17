@@ -17,9 +17,23 @@ const createFilmCardTemplate = (film) => {
 
   const singleGenre = filmInfo.genre[0];
 
-  const isWatchlist = classNames({'film-card__controls-item--active' : userDetails.watchlist});
-  const isWatched = classNames({'film-card__controls-item--active' : userDetails.alreadyWatched});
-  const isFavorite = classNames({'film-card__controls-item--active' : userDetails.favorite});
+  const isWatchlist = classNames({'film-card__controls-item--active': userDetails.watchlist});
+  const isWatched = classNames({'film-card__controls-item--active': userDetails.alreadyWatched});
+  const isFavorite = classNames({'film-card__controls-item--active': userDetails.favorite});
+
+  let commentsCount;
+
+  switch (film.comments.length) {
+    case 0:
+      commentsCount = '';
+      break;
+    case 1:
+      commentsCount = `${film.comments.length} comment`;
+      break;
+    default:
+      commentsCount = `${film.comments.length} comments`;
+      break;
+  }
 
   return (
     `<article class="film-card">
@@ -33,7 +47,7 @@ const createFilmCardTemplate = (film) => {
         </p>
         <img src="./${filmInfo.poster}" alt="" class="film-card__poster">
         <p class="film-card__description">${filmInfo.description}</p>
-        <span class="film-card__comments">5 comments</span>
+        <span class="film-card__comments">${commentsCount}</span>
       </a>
       <div class="film-card__controls">
         <button class="film-card__controls-item film-card__controls-item--add-to-watchlist ${isWatchlist}" type="button">Add to watchlist
@@ -48,7 +62,7 @@ const createFilmCardTemplate = (film) => {
 };
 
 export default class FilmCardView extends AbstractView {
-  #film = null;
+  #film = {};
 
   constructor(film) {
     super();
@@ -61,11 +75,51 @@ export default class FilmCardView extends AbstractView {
 
   setClickHandler = (callback) => {
     this._callback.click = callback;
-    this.element.addEventListener('click', this.#clickHandler);
+    this.element.querySelector('.film-card__link').addEventListener('click', this.#clickHandler);
   };
 
   #clickHandler = (event) => {
     event.preventDefault();
+    document.body.classList.add('hide-overflow');
     this._callback.click();
+  };
+
+  setAddToWatchlistClickHandler = (callback) => {
+    this._callback.watchlistClick = callback;
+    this
+      .element
+      .querySelector('.film-card__controls-item--add-to-watchlist')
+      .addEventListener('click', this.#watchlistClickHandler);
+  };
+
+  setAlreadyWatchedClickHandler = (callback) => {
+    this._callback.alreadyWatchedClick = callback;
+    this
+      .element
+      .querySelector('.film-card__controls-item--mark-as-watched')
+      .addEventListener('click', this.#alreadyWatchedClickHandler);
+  };
+
+  setFavoriteClickHandler = (callback) => {
+    this._callback.favoriteClick = callback;
+    this
+      .element
+      .querySelector('.film-card__controls-item--favorite')
+      .addEventListener('click', this.#favoriteClickHandler);
+  };
+
+  #watchlistClickHandler = (event) => {
+    event.preventDefault();
+    this._callback.watchlistClick();
+  };
+
+  #alreadyWatchedClickHandler = (event) => {
+    event.preventDefault();
+    this._callback.alreadyWatchedClick();
+  };
+
+  #favoriteClickHandler = (event) => {
+    event.preventDefault();
+    this._callback.favoriteClick();
   };
 }

@@ -212,8 +212,8 @@ const createFilmsPopupTemplate = (film, comments) => {
 };
 
 export default class FilmsPopupView extends  AbstractView {
-  #film = null;
-  #comments = null;
+  #film = {};
+  #comments = {};
 
   constructor(film, comments) {
     super();
@@ -227,11 +227,54 @@ export default class FilmsPopupView extends  AbstractView {
 
   setClickHandler = (callback) => {
     this._callback.click = callback;
-    this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#clickHandler);
+    this
+      .element
+      .querySelector('.film-details__close-btn')
+      .addEventListener('click', this.#closeClickHandler);
   };
 
-  #clickHandler = (event) => {
+  #closeClickHandler = (event) => {
     event.preventDefault();
     this._callback.click();
+    document.body.classList.remove('hide-overflow');
+  };
+
+  setAddToWatchlistClickHandler = (callback) => {
+    this._callback.watchlistClick = callback;
+    this
+      .element
+      .querySelector('.film-details__control-button--watchlist')
+      .addEventListener('click', this.#watchlistClickHandler);
+  };
+
+  setAlreadyWatchedClickHandler = (callback) => {
+    this._callback.alreadyWatchedClick = callback;
+    this
+      .element
+      .querySelector('.film-details__control-button--watched')
+      .addEventListener('click', this.#alreadyWatchedClickHandler);
+  };
+
+  setFavoriteClickHandler = (callback) => {
+    this._callback.favoriteClick = callback;
+    this
+      .element
+      .querySelector('.film-details__control-button--favorite')
+      .addEventListener('click', this.#favoriteClickHandler);
+  };
+
+  #watchlistClickHandler = (event) => {
+    event.preventDefault();
+    this._callback.watchlistClick();
+  };
+
+  #alreadyWatchedClickHandler = (event) => {
+    event.preventDefault();
+    this._callback.alreadyWatchedClick();
+  };
+
+  #favoriteClickHandler = (event) => {
+    event.preventDefault();
+    this._callback.favoriteClick();
   };
 }

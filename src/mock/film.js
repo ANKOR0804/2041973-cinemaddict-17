@@ -1,4 +1,5 @@
 import {getRandomInteger} from '../utils/common';
+import {nanoid} from 'nanoid';
 
 const genetareTitle = () => {
   const titles = [
@@ -78,19 +79,6 @@ const generateDate = () => {
   return dates[randomIndex];
 };
 
-const generateEmotion = () => {
-  const emotions = [
-    'smile',
-    'sleeping',
-    'puke',
-    'angry',
-  ];
-
-  const randomIndex = getRandomInteger(0, emotions.length - 1);
-
-  return emotions[randomIndex];
-};
-
 const generateRating = () => {
   const ratings = [
     0,
@@ -114,26 +102,12 @@ const generateState = () => {
   return states[randomIndex];
 };
 
-export const generateComments = () => [
-  {
-    id: '0',
-    author: genetareTitle(),
-    comment: generateDescription(),
-    date: generateDate(),
-    emotion: generateEmotion(),
-  },
-  {
-    id: '1',
-    author: genetareTitle(),
-    comment: generateDescription(),
-    date: generateDate(),
-    emotion: generateEmotion(),
-  }
-];
+const generateFilm = (comments) => ({
+  id: nanoid(),
+  comments: Array.from({length: 5}, () =>
+    comments.map((comment) => comment.id))
+    .filter((item, index, arr) => arr.indexOf(item) === index),
 
-export const generateFilm = () => ({
-  id: '0',
-  comments: ['0', '1'],
   filmInfo: {
     title: genetareTitle(),
     alternativeTitle: genetareTitle(),
@@ -159,3 +133,6 @@ export const generateFilm = () => ({
     favorite: generateState(),
   },
 });
+
+export const generateFilms = (size, comments = []) =>
+  Array.from({length: size}, () => generateFilm(comments));

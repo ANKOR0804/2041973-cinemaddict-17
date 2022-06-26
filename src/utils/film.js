@@ -5,18 +5,20 @@ const humanizeDateByYear = (dateByYear) => dayjs(dateByYear).format('YYYY');
 const humanizeDateByDay = (dateByDay) => dayjs(dateByDay).format('DD MMMM YYYY');
 
 const humanizeFullByTime = (dateByTime) => {
-  const datesDifferenceInDays = dayjs().diff(dayjs(dateByTime), 'day');
+  const dateInner = dayjs(dateByTime);
+  const dayDifferenceInDays = dayjs().diff(dateInner, 'days');
 
-  switch (datesDifferenceInDays) {
-    case 0:
-      return 'Today';
-    case 1:
-      return `${datesDifferenceInDays} day ago`;
-    case 2: case 3: case 4: case 5: case 6: case 7:
-      return `${datesDifferenceInDays} days ago`;
-    default:
-      return dayjs(dateByTime).format('YYYY/MM/DD HH:MM');
+  if (dayDifferenceInDays <= 1) {
+    return 'Today';
   }
+  if (dayDifferenceInDays > 1 && dayDifferenceInDays <= 30) {
+    return `${dayDifferenceInDays} days ago`;
+  }
+  if (dayDifferenceInDays >30) {
+    return dayjs(dateByTime).format('YYYY/MM/DD HH:MM');
+  }
+
+  return dayjs(dateByTime).format('YYYY/MM/DD HH:MM');
 };
 
 const humanizeDuration = (time) => {
