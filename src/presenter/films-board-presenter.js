@@ -135,18 +135,6 @@ export default class FilmsBoardPresenter {
     render(this.#noFilmsComponent, this.#filmsBoardComponent.element);
   };
 
-  #renderSort = () => {
-    render(this.#sortComponent, this.#filmsBoardComponent.element, RenderPosition.BEFOREBEGIN);
-  };
-
-  #renderFilmsList = () => {
-    render(this.#allFilmsListComponent, this.#filmsBoardComponent.element);
-  };
-
-  // #renderFilmsListContainerComponent = () => {
-  //   render(this.#filmsListContainerComponent, this.#filmsListComponent.element);
-  // };
-
   #renderSortComponent () {
     render (this.#sortComponent, this.#siteMainElement);
     this.#sortComponent.setSortTypeChangeCLickHandler(this.#handleSortTypeChange);
