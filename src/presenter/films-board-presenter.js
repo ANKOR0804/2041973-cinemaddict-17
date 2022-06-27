@@ -98,23 +98,14 @@ export default class FilmsBoardPresenter {
     }
   };
 
-  #handleViewAction = async (actionType, updateType, updateItem) => {
+  #handleViewAction = async (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
-        try {
-          await this.#filmsModel.updateFilm(updateType, updateItem);
-        } catch (error) {
-          throw error.message;
-        }
+        await this.#filmsModel.updateFilm(updateType, update);
         break;
       case UserAction.DELETE_COMMENT:
       case UserAction.ADD_COMMENT:
-        this.#filmsModel.updateToLocal(updateType, updateItem);
-        break;
-      case UpdateType.INIT:
-        this.#isLoading = false;
-        remove(this.#loadingComponent);
-        this.#renderFilmsBoard();
+        this.#filmsModel.updateToLocal(updateType, update);
         break;
     }
   };
@@ -125,14 +116,17 @@ export default class FilmsBoardPresenter {
         this.#filmPresenter.get(data.id)
           .forEach((presenter) => presenter.init(data));
         break;
-
       case UpdateType.MINOR:
         this.#clearFilmsBoard();
         this.#renderFilmsBoard();
         break;
-
       case UpdateType.MAJOR:
         this.#clearFilmsBoard({resetRenderedAllFilms: true, resetSortType: true});
+        this.#renderFilmsBoard();
+        break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
         this.#renderFilmsBoard();
         break;
     }

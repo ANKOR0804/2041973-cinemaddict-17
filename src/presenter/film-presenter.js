@@ -62,7 +62,7 @@ export default class FilmPresenter {
     }
 
     if (this.isPopup()) {
-      this.#getAndUpdateComments(this.#filmComments);
+      this.#replaceFilmDetailsComponent(this.#filmComments);
     }
   };
 
@@ -220,9 +220,15 @@ export default class FilmPresenter {
     }
   };
 
-  #getAndUpdateComments = async (comments) => {
+  #getAndUpdateComments = async () => {
+    const comments = await this.#commentModel.getCommentsById(this.film.id);
+    this.#prevFilmPopupComponent = this.#filmPopupComponent;
+    this.#replaceFilmDetailsComponent(comments);
+  };
+
+  #replaceFilmDetailsComponent = (comments) => {
     this.#scrollTopDetails = this.#prevFilmPopupComponent.element.scrollTop;
-    this.#prevFilmPopupComponent = new FilmsPopupView(this.film, comments);
+    this.#filmPopupComponent = new FilmsPopupView(this.film, comments);
     this.#setFilmPopupHandlers();
     replace(this.#filmPopupComponent, this.#prevFilmPopupComponent);
     this.#filmPopupComponent.element.scrollTop = this.#scrollTopDetails;
