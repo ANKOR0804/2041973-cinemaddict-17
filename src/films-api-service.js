@@ -17,13 +17,13 @@ export default class FilmsApiService extends ApiService {
     const response = await this._load({
       url: `movies/${film.id}`,
       method: Method.PUT,
-      body: JSON.stringify(this.#adaptToServer),
+      body: JSON.stringify(this.#adaptToServer(film)),
       headers: new Headers({'Content-Type': 'application/json'}),
     });
 
-    const parsedResponse = await ApiService.parseResponse(response);
+    const parseResponse = await ApiService.parseResponse(response);
 
-    return parsedResponse;
+    return parseResponse;
   };
 
   #adaptToServer = (film) => {
@@ -62,7 +62,7 @@ export default class FilmsApiService extends ApiService {
     ._load({url: `comments/${filmId}`})
     .then(ApiService.parseResponse);
 
-  addComments = async (filmId, comment) => {
+  addComment = async (filmId, comment) => {
     const response = await this._load({
       url: `comments/${filmId}`,
       method: Method.POST,
