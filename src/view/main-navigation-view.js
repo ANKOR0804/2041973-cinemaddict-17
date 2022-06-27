@@ -42,6 +42,6 @@ export default class MainNavigationView extends AbstractView {
 
   #filterTypeClickHandler = (event) => {
     event.preventDefault();
-    this._callback.filterTypeClick(event.target.id);
+    this._callback.filterTypeClick(event.currentTarget.id);
   };
 }

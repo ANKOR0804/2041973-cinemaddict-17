@@ -3,7 +3,6 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import {humanizeDuration, humanizeDateByDay, humanizeFullByTime} from '../utils/film';
 import classNames from 'classnames';
-import {nanoid} from 'nanoid';
 import he from 'he';
 
 const createFilmsPopupTemplate = (state, comments) => {
@@ -70,7 +69,9 @@ const createFilmsPopupTemplate = (state, comments) => {
             <p class="film-details__comment-info">
               <span class="film-details__comment-author">${comment.author}</span>
               <span class="film-details__comment-day">${commentDay}</span>
-              <button class="film-details__comment-delete">Delete</button>
+              <button class="film-details__comment-delete "${state.isCommentDeleting ? ' disabled' : ''}>
+                ${state.isCommentDeleting ? 'Deleting...' : 'Delete'}
+              </button>
             </p>
           </div>
         </li>`;
@@ -86,8 +87,7 @@ const createFilmsPopupTemplate = (state, comments) => {
     : '';
 
   return (
-    `<section class="film-details">
-      <form class="film-details__inner" action="" method="get">
+    `<form class="film-details__inner" action="" method="get">
         <div class="film-details__top-container">
           <div class="film-details__close">
             <button class="film-details__close-btn" type="button">close</button>
@@ -151,16 +151,16 @@ const createFilmsPopupTemplate = (state, comments) => {
           <section class="film-details__controls">
             <button type="button"
                     class="film-details__control-button film-details__control-button--watchlist ${isWatchlist}"
-                    id="watchlist" name="watchlist">Add to watchlist
+                    id="watchlist" name="watchlist" ${state.isFilmUpdating ? ' disabled' : ''}>Add to watchlist
             </button>
             <button type="button"
                     class="film-details__control-button film-details__control-button--watched ${isWatched}"
-                    id="watched" name="watched">Already watched
+                    id="watched" name="watched" ${state.isFilmUpdating ? ' disabled' : ''}>Already watched
             </button>
             <button type="button"
                     class="film-details__control-button film-details__control-button--favorite ${isFavorite}"
                     id="favorite"
-                    name="favorite">Add to favorites
+                    name="favorite" ${state.isFilmUpdating ? ' disabled' : ''}>Add to favorites
             </button>
           </section>
         </div>
@@ -177,34 +177,40 @@ const createFilmsPopupTemplate = (state, comments) => {
               <div class="film-details__add-emoji-label">${commentEmojiTemplate}</div>
 
               <label class="film-details__comment-label">
-            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here"
-                      name="comment">${state.commentText ? state.commentText : ''}</textarea>
+                <textarea class="film-details__comment-input"
+                          placeholder="Select reaction below and write comment here"
+                          name="comment" ${state.isCommentAdding ? ' disabled' : ''}>
+                  ${state.commentText ? state.commentText : ''}
+                </textarea>
               </label>
 
               <div class="film-details__emoji-list">
                 <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio"
                        id="emoji-smile"
-                       value="smile">
+                       value="smile"
+                       ${state.isCommentAdding ? ' disabled' : ''}>
                 <label class="film-details__emoji-label" for="emoji-smile">
                   <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
                 </label>
 
                 <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio"
-                       id="emoji-sleeping" value="sleeping">
+                       id="emoji-sleeping" value="sleeping" ${state.isCommentAdding ? ' disabled' : ''}>
                 <label class="film-details__emoji-label" for="emoji-sleeping">
                   <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
                 </label>
 
                 <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio"
                        id="emoji-puke"
-                       value="puke">
+                       value="puke"
+                       ${state.isCommentAdding ? ' disabled' : ''}>
                 <label class="film-details__emoji-label" for="emoji-puke">
                   <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
                 </label>
 
                 <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio"
                        id="emoji-angry"
-                       value="angry">
+                       value="angry"
+                       ${state.isCommentAdding ? ' disabled' : ''}>
                 <label class="film-details__emoji-label" for="emoji-angry">
                   <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
                 </label>
@@ -212,8 +218,7 @@ const createFilmsPopupTemplate = (state, comments) => {
             </div>
           </section>
         </div>
-      </form>
-    </section>`
+      </form>`
   );
 };
 
@@ -271,16 +276,34 @@ export default class FilmsPopupView extends AbstractStatefulView {
 
   #watchlistClickHandler = (event) => {
     event.preventDefault();
+
+    this.updateElement({
+      scrollTop: this.element.scrollTop,
+      isFilmUpdating: true,
+    });
+
     this._callback.watchlistClick();
   };
 
   #alreadyWatchedClickHandler = (event) => {
     event.preventDefault();
+
+    this.updateElement({
+      scrollTop: this.element.scrollTop,
+      isFilmUpdating: true,
+    });
+
     this._callback.alreadyWatchedClick();
   };
 
   #favoriteClickHandler = (event) => {
     event.preventDefault();
+
+    this.updateElement({
+      scrollTop: this.element.scrollTop,
+      isFilmUpdating: true,
+    });
+
     this._callback.favoriteClick();
   };
 
@@ -289,6 +312,9 @@ export default class FilmsPopupView extends AbstractStatefulView {
     commentEmoji: null,
     commentText: null,
     scrollTop: null,
+    isCommentDeleting: false,
+    isCommentAdding: false,
+    isFilmUpdating: false,
   });
 
   _restoreHandlers = () => {
@@ -296,7 +322,7 @@ export default class FilmsPopupView extends AbstractStatefulView {
     this.#setOuterHandlers();
   };
 
-  #restorePosition = () => {
+  restorePosition = () => {
     this.element.scrollTop = this._state.scrollTop;
   };
 
@@ -310,7 +336,7 @@ export default class FilmsPopupView extends AbstractStatefulView {
       });
 
     this.element.querySelector(`#${event.target.id}`).checked = true;
-    this.#restorePosition();
+    this.restorePosition();
   };
 
   #localCommentInputHandler = (event) => {
@@ -318,7 +344,7 @@ export default class FilmsPopupView extends AbstractStatefulView {
 
     this._setState({commentText: event.target.value, scrollTop: this.element.scrollTop});
 
-    this.#restorePosition();
+    this.restorePosition();
   };
 
   #setInnerHandlers = () => {
@@ -351,18 +377,29 @@ export default class FilmsPopupView extends AbstractStatefulView {
       .addEventListener('keydown', this.#commentAddClickHandler);
   };
 
-  #commentDeleteClickHandler = (evt) => {
-    evt.preventDefault();
-    this._callback.commentDeleteClick(evt.target.closest('.film-details__comment').id);
+  #commentDeleteClickHandler = (event) => {
+    event.preventDefault();
+    const commentId = event.target.closest('.film-details__comment').id;
+
+    this.updateElement({
+      scrollTop: this.element.scrollTop,
+      isCommentDeleting: true,
+    });
+
+    this.element.querySelector(`.film-details__comment[id="${commentId}"]`)
+      .querySelector('.film-details__comment-delete').textContent = 'Deleting...';
+    this._callback.commentDeleteClick(event.target.closest('.film-details__comment').id);
   };
 
-  #commentAddClickHandler = (evt) => {
-    if ((evt.ctrlKey || evt.metaKey) && evt.keyCode === 13 && this._state.commentEmoji) {
+  #commentAddClickHandler = (event) => {
+    if ((event.ctrlKey || event.metaKey) && event.keyCode === 13 && this._state.commentEmoji) {
+      this.updateElement({
+        scrollTop: this.element.scrollTop,
+        isCommentAdding: true,
+      });
+
       this._callback.commentAddClick({
-        id: nanoid(),
-        author: 'Marry Jain',
         comment: this._state.commentText,
-        date: '100',
         emotion: this._state.commentEmoji,
       });
     }
@@ -371,6 +408,4 @@ export default class FilmsPopupView extends AbstractStatefulView {
   reset = (film) => {
     this.updateElement(this.#parseFilmToState(film));
   };
-
-  // #getCommentTextElement = () => this.element.querySelector('.film-details__comment-input');
 }

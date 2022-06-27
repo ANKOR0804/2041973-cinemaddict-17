@@ -1,11 +1,11 @@
 // *** Карточка фильма ***
 
-import AbstractView from '../framework/view/abstract-view';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import {humanizeDateByYear, humanizeDuration} from '../utils/film';
 import classNames from 'classnames';
 
-const createFilmCardTemplate = (film) => {
-  const {filmInfo, userDetails} = film;
+const createFilmCardTemplate = (state) => {
+  const {filmInfo, userDetails} = state;
 
   const releaseDate = filmInfo.release.date !== null
     ? humanizeDateByYear(filmInfo.release.date)
@@ -23,15 +23,15 @@ const createFilmCardTemplate = (film) => {
 
   let commentsCount;
 
-  switch (film.comments.length) {
+  switch (state.comments.length) {
     case 0:
       commentsCount = '';
       break;
     case 1:
-      commentsCount = `${film.comments.length} comment`;
+      commentsCount = `${state.comments.length} comment`;
       break;
     default:
-      commentsCount = `${film.comments.length} comments`;
+      commentsCount = `${state.comments.length} comments`;
       break;
   }
 
@@ -61,17 +61,27 @@ const createFilmCardTemplate = (film) => {
   );
 };
 
-export default class FilmCardView extends AbstractView {
-  #film = {};
-
+export default class FilmCardView extends AbstractStatefulView {
   constructor(film) {
     super();
-    this.#film = film;
+    this._state = this.#convertFilmToState(film);
   }
 
   get template() {
-    return createFilmCardTemplate(this.#film);
+    return createFilmCardTemplate(this._state);
   }
+
+  #convertFilmToState = (film) => ({
+    ...film,
+    isFilmUpdating: false
+  });
+
+  _restoreHandlers = () => {
+    this.setClickHandler(this._callback.click);
+    this.setAddToWatchlistClickHandler(this._callback.watchlistClick);
+    this.setAlreadyWatchedClickHandler(this._callback.alreadyWatchedClick);
+    this.setFavoriteClickHandler(this._callback.favoriteClick);
+  };
 
   setClickHandler = (callback) => {
     this._callback.click = callback;
@@ -110,16 +120,31 @@ export default class FilmCardView extends AbstractView {
 
   #watchlistClickHandler = (event) => {
     event.preventDefault();
+
+    this.updateElement({
+      isFilmUpdating: true,
+    });
+
     this._callback.watchlistClick();
   };
 
   #alreadyWatchedClickHandler = (event) => {
     event.preventDefault();
+
+    this.updateElement({
+      isFilmUpdating: true,
+    });
+
     this._callback.alreadyWatchedClick();
   };
 
   #favoriteClickHandler = (event) => {
     event.preventDefault();
+
+    this.updateElement({
+      isFilmUpdating: true,
+    });
+
     this._callback.favoriteClick();
   };
 }
