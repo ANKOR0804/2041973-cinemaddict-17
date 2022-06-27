@@ -1,4 +1,4 @@
-import {getRandomInteger} from '../utils/common';
+import {getRandomInteger, getRandomArrayElement} from '../utils/common';
 import {nanoid} from 'nanoid';
 
 const genetareTitle = () => {
@@ -104,8 +104,10 @@ const generateState = () => {
 
 const generateFilm = (comments) => ({
   id: nanoid(),
-  comments: Array.from({length: 5}, () =>
-    comments.map((comment) => comment.id))
+  comments: Array.from(
+    {length: getRandomInteger(0, 5)},
+    () => getRandomArrayElement(comments.map((comment) => comment.id))
+  )
     .filter((item, index, arr) => arr.indexOf(item) === index),
 
   filmInfo: {

@@ -2,21 +2,10 @@
 
 import AbstractView from '../framework/view/abstract-view';
 
-const USER_RANK = {
-  'Novice': [1, 10],
-  'Fan': [11, 20],
-  'Movie Buff': [21, Infinity],
-};
-
-const getUserRank = (amount) => Object
-  .entries(USER_RANK)
-  .filter(([, value]) => amount >= value[0] && amount <= value[1])
-  .flat();
-
-const createHeaderProfileTemplate = () => (
+const createHeaderProfileTemplate = (profileRank) => (
   `<section class="header__profile profile">${
     length !== 0
-      ? `<p class="profile__rating">${getUserRank(length)[0].charAt(0).toUpperCase() + getUserRank(length)[0].slice(1)}</p>`
+      ? `<p class="profile__rating">${profileRank.charAt(0).toUpperCase() + profileRank.slice(1)}</p>`
       : ''
   }
     <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
@@ -24,14 +13,14 @@ const createHeaderProfileTemplate = () => (
 );
 
 export default class HeaderProfileView extends AbstractView {
-  #watchedFilmCount = null;
+  #profileRank = null;
 
-  constructor(films) {
+  constructor(profileRank) {
     super();
-    this.#watchedFilmCount = films.filter((film) => film.userDetails.alreadyWatched).length;
+    this.#profileRank = profileRank;
   }
 
   get template() {
-    return createHeaderProfileTemplate(this.#watchedFilmCount);
+    return createHeaderProfileTemplate(this.#profileRank);
   }
 }

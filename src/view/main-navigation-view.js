@@ -1,46 +1,47 @@
 // *** Навигация ***
 
 import AbstractView from '../framework/view/abstract-view';
+import {FilterType} from '../const';
 
-const createMainNavigationTemplate = (films) => {
-  const initialCount = {
-    watchListCount: 0,
-    favoriteCount: 0,
-    watchedList: 0,
-  };
+const createFilterItemTemplate = (filmFilter, currentFilter) => (
+  `<a id="${filmFilter.type}"
+      href="#${filmFilter.name}"
+      class="main-navigation__item ${filmFilter.type === currentFilter ? 'main-navigation__item--active' : ''}">
+    ${filmFilter.type !== FilterType.ALL
+    ? `${filmFilter.name.charAt(0).toUpperCase() + filmFilter.name.slice(1)}
+      <span class="main-navigation__item-count">${filmFilter.count}</span>`
+    : 'All movies'}
+  </a>`
+);
 
-  const totalCount = films.reduce((count, item) => {
-    const {watchlist, alreadyWatched, favorite} = item.userDetails;
-
-    return {
-      watchListCount: count.watchListCount + (watchlist ? 1 : 0),
-      favoriteCount: count.favoriteCount + (alreadyWatched ? 1 : 0),
-      watchedList: count.watchedList + (favorite ? 1 : 0)
-    };
-  }, initialCount);
-
-  return (
-    `<nav class="main-navigation">
-      <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
-      <a href="#watchlist" class="main-navigation__item">
-        Watchlist <span class="main-navigation__item-count">${totalCount.watchListCount}</span></a>
-      <a href="#history" class="main-navigation__item">
-        History <span class="main-navigation__item-count">${totalCount.favoriteCount}</span></a>
-      <a href="#favorites" class="main-navigation__item">
-        Favorites <span class="main-navigation__item-count">${totalCount.watchedList}</span></a>
-    </nav>`
-  );
-};
+const createMainNavigationTemplate = (filterTypes, currentFilter) => (
+  `<nav class="main-navigation">
+    ${filterTypes.map((filmFilter) => createFilterItemTemplate(filmFilter, currentFilter)).join(' ')}
+  </nav>`
+);
 
 export default class MainNavigationView extends AbstractView {
-  #userInfo = null;
+  #filterTypes = null;
+  #currentFilter = null;
 
-  constructor(userInfo) {
+  constructor(filterTypes, currentFilter) {
     super();
-    this.#userInfo = userInfo;
+    this.#filterTypes = filterTypes;
+    this.#currentFilter = currentFilter;
   }
 
   get template() {
-    return createMainNavigationTemplate(this.#userInfo);
+    return createMainNavigationTemplate(this.#filterTypes, this.#currentFilter);
   }
+
+  setFilterTypeClickHandler = (callback) => {
+    this._callback.filterTypeClick = callback;
+    this.element.querySelectorAll('.main-navigation__item')
+      .forEach((element) => element.addEventListener('click', this.#filterTypeClickHandler));
+  };
+
+  #filterTypeClickHandler = (event) => {
+    event.preventDefault();
+    this._callback.filterTypeClick(event.target.id);
+  };
 }

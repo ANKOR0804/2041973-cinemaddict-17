@@ -1,38 +1,26 @@
 // *** Модуль модели фильма ***
 
-import {generateFilms} from '../mock/film';
-import {generateComments} from '../mock/comments';
+import Observable from '../framework/observable';
 
-const FILMS_COUNT = 21;
-const COMMENTS_COUNT = 5;
 const TOP_RATED_FILMS_COUNT = 2;
 const MOST_COMMENTED_FILMS_COUNT = 2;
 
-export default class FilmsModel {
+export default class FilmsModel extends Observable{
   #films = null;
-  #comments = null;
   #topRatedFilms = null;
   #mostCommentedFilms = null;
 
   get films() {
-    if (!this.#films) {
-      this.#films = generateFilms(FILMS_COUNT, this.comments);
-    }
-
     return this.#films;
   }
 
-  get comments() {
-    if (!this.#comments) {
-      this.#comments = generateComments(COMMENTS_COUNT);
-    }
-
-    return this.#comments;
+  set films(films) {
+    this.#films = films;
   }
 
   get topRatedFilms() {
     if (!this.#topRatedFilms) {
-      this.#topRatedFilms = this.films
+      this.#topRatedFilms = [...this.films]
         .sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating)
         .slice(0, Math.min(this.films.length, TOP_RATED_FILMS_COUNT));
     }
@@ -42,7 +30,7 @@ export default class FilmsModel {
 
   get mostCommentedFilms() {
     if (!this.#mostCommentedFilms) {
-      this.#mostCommentedFilms = this.films
+      this.#mostCommentedFilms = [...this.films]
         .sort((a, b) => b.comments.length - a.comments.length)
         .slice(0, Math.min(this.films.length, MOST_COMMENTED_FILMS_COUNT));
     }
@@ -50,7 +38,21 @@ export default class FilmsModel {
     return this.#mostCommentedFilms;
   }
 
-  getFilmComments() {
-    return this.comments;
-  }
+  updateFilm = (updateType, update) => {
+    const index = this.#films.findIndex((film) => film.id === update.id);
+    if (index === -1) {
+      throw new Error('Can\'t update unexisting film');
+    }
+
+    this.#films = [
+      ...this.#films.slice(0, index),
+      update,
+      ...this.#films.slice(index + 1),
+    ];
+
+    this.#mostCommentedFilms = null;
+    this.#topRatedFilms = null;
+
+    this._notify(updateType, update);
+  };
 }

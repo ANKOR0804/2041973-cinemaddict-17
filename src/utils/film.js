@@ -14,7 +14,7 @@ const humanizeFullByTime = (dateByTime) => {
   if (dayDifferenceInDays > 1 && dayDifferenceInDays <= 30) {
     return `${dayDifferenceInDays} days ago`;
   }
-  if (dayDifferenceInDays >30) {
+  if (dayDifferenceInDays > 30) {
     return dayjs(dateByTime).format('YYYY/MM/DD HH:MM');
   }
 
